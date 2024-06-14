@@ -31,12 +31,41 @@ router.get( '/:videoId', (req,res)=>{
 
 router.post('/', (req, res) => {
     const videoData = JSON.parse(fs.readFileSync('./data/videos.json'))
-    const { title, channel, image } = req.body;
+    const { title, description, image } = req.body;
     const newVideo = { 
         id: uuidv4(),
         title: title,
-        channel: channel,
-        image: image
+        channel: 'Kelvin',
+        image: image,
+        description: description,
+        views: '5000',
+        likes: '300',
+        duration: '4:00',
+        video: 'https://unit-3-project-api-0a5620414506.herokuapp.com/stream',
+        timestamp: Date.now(),
+        comments: [
+            {
+                id:uuidv4(),
+                name: 'Kirk Wade',
+                comment: 'I love the song in this video.',
+                likes: '10',
+                timestamp: Date.now()
+            },
+            {
+                id:uuidv4(),
+                name: 'John Cena',
+                comment: 'I love the song in this video.',
+                likes: '2000',
+                timestamp: Date.now()
+            },
+            {
+                id:uuidv4(),
+                name: 'Jimmy Din',
+                comment: 'While the concept of mindful living is intriguing, I found it challenging to incorporate into my hectic routine. Perhaps a more realistic approach or practical tips for those with busy schedules would be beneficial. Looking forward to seeing more actionable advice.',
+                likes: '15',
+                timestamp: Date.now()
+            }
+        ]
     }
     videoData.push(newVideo)
     fs.writeFileSync('./data/videos.json', JSON.stringify(videoData))
