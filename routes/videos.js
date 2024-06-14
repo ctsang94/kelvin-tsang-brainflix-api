@@ -29,6 +29,21 @@ router.get( '/:videoId', (req,res)=>{
     }
 })
 
+router.post('/', (req, res) => {
+    const videoData = JSON.parse(fs.readFileSync('./data/videos.json'))
+    const { title, channel, image } = req.body;
+    const newVideo = { 
+        id: uuidv4(),
+        title: title,
+        channel: channel,
+        image: image
+    }
+    videoData.push(newVideo)
+    fs.writeFileSync('./data/videos.json', JSON.stringify(videoData))
+    res.status(201).json({message: 'Video added successfully'})
+
+} )
+
 router.post('/:videoId/comments', (req, res) => {
     const videoData = JSON.parse(fs.readFileSync('./data/videos.json'))
     const videoId = req.params.videoId
@@ -45,9 +60,9 @@ router.post('/:videoId/comments', (req, res) => {
     if (video) {
         video.comments.push(newComments)
         fs.writeFileSync('./data/videos.json', JSON.stringify(videoData))
-        res.sendStatus(201).json({message: 'Comment added succesfully'})
+        res.status(201).json({message: 'Comment added succesfully'})
     }else{
-        res.sendStatus(404).json({message: 'Video not found'})
+        res.status(404).json({message: 'Video not found'})
 
     }
 

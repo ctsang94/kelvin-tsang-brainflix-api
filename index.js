@@ -8,6 +8,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 app.use('/videos', videosRoute)
+app.use(express.static('public'))
 
 const PORT = process.env.PORT || 8080
 app.listen(PORT, ()=>{
