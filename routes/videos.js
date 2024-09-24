@@ -3,36 +3,39 @@ const router = express.Router()
 import fs from 'fs'
 import { v4 as uuidv4} from 'uuid'
 
-router.get('/', (req,res)=>{
-    const videoData = JSON.parse(fs.readFileSync('./data/videos.json'))
-    
-    const extractedData = videoData.map(video => ({
-        id: video.id,
-        title: video.title,
-        channel: video.channel,
-        image: video.image
-     }));
-    res.json(extractedData)
+router.get('/', async (req,res)=>{
+    try{ const videoData = JSON.parse(await fs.readFileSync('./data/videos.json'))
+
+        const extractedData = videoData.map(video => ({
+            id: video.id,
+            title: video.title,
+            channel: video.channel,
+            image: video.image
+         }));
+        res.json(extractedData)}
+catch(err){
+    res.status(500).json({error: 'Error reading video data'})
+}
 })
 
 router.get( '/:videoId', (req,res)=>{
     const {videoId} = req.params
     const videoData = JSON.parse(fs.readFileSync('./data/videos.json'))
     const foundVideo = videoData.find( video => video.id === videoId )
-    
+
     if (!foundVideo) {
         res.sendStatus(204)
         return
     }
     else{
-       res.json(foundVideo) 
+       res.json(foundVideo)
     }
 })
 
 router.post('/', (req, res) => {
     const videoData = JSON.parse(fs.readFileSync('./data/videos.json'))
     const { title, description, image } = req.body;
-    const newVideo = { 
+    const newVideo = {
         id: uuidv4(),
         title: title,
         channel: 'Kelvin',
@@ -95,6 +98,6 @@ router.post('/:videoId/comments', (req, res) => {
 
     }
 
-})  
+})
 
 export default router
